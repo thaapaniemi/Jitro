@@ -5,41 +5,49 @@
 */
 class Key
 {
+	protected $specialKeywords = array("ALL");
 	public $key;
-	public $parameters;
+	public $acceptedValues;
 	public $route;
 	
-	public function __construct($key, $parameters, $route)
+	public function __construct($key, $acceptedValues, $route)
 	{
 		$this->key = $key;
-		$this->parameters = $parameters;
+		$this->acceptedValues = $acceptedValues;
 		$this->route = $route;
 	}
 
-	public function CheckParameters()
+	public function CheckacceptedValues()
 	{
 		if(!isset($this->key) || !isset($this->route)){return False;}
 
-		$route = NULL;
+		$route = $this->getRoute();
+		
+		if(array_key_exists($this->key, $route) && in_array($route[$this->key], $this->acceptedValues)){
+			return True;
+		}else{
+			return False;
+		}
+	}
+
+	public function __toString(){
+		return $this->key;
+	}
+
+	public function Value(){
+		return $this->getRoute()[$this->key];
+	}
+
+	protected function getRoute(){
 		switch ($this->route) {
 			case 'GET':
-				$route = $_GET;
+				return $_GET;
 				break;
 
 				case 'POST':
-				$route = $_POST;
-				break;
-			
-			default:
-				# code...
+				return $_POST;
 				break;
 		}
-
-		foreach ($this->parameters as $value) {
-			if(!isset($route[$value])){return False;}
-		}
-
-		return True;
 	}
 }
 
@@ -48,54 +56,48 @@ class Key
 */
 class Jitro
 {
-	private static $keys;
-	private static $map;
-	
-	private function __construct(){}
+	protected static $keys = array();
 
-	public static function AddKey($key, $parameters, $route="POST")
+	protected static $validatedKeys = NULL;
+	protected static $ignoredKeys = NULL;
+	
+	protected function __construct(){}
+
+	public static function AddKey($key, $acceptedValues, $route="POST")
 	{
-		$keys[] = new Key($key, $parameters, $route);
+		Jitro::$keys[] = new Key($key, $acceptedValues, $route);
+	}
+
+	public static function Get($key){
+		if(!isset(Jitro::$validatedKeys) || !isset(Jitro::$ignoredKeys) ){
+			Jitro::$validatedKeys = Jitro::GetValidatedKeys();
+			Jitro::$ignoredKeys = Jitro::GetIgnoredKeys();
+		}
+
+		if(isset(Jitro::$validatedKeys[$key])){
+			return Jitro::$validatedKeys[$key]->Value();
+		}else{
+			throw new Exception("No valid key: $key", 1);
+		}
 	}
 
 	public static function GetValidatedKeys()
 	{
 		$validated = array();
-		foreach ($this->keys as $key) {
-			if($key->CheckParameters()){
-				$validated[] = $key;
+		foreach (Jitro::$keys as $key) {
+			if($key->CheckacceptedValues()){
+				$validated[$key->key] = $key;
 			}
 		}
-
 		return $validated;
 	}
 
-	public static GetIgnoredKeys(){
-		return array_diff($this->keys, $this->GetValidatedKeys());
-	}
-
-	public static AddMap($key, $map){
-		$this->map[$key] = $map;
-	}
-
-	public static GetDataFromDB($keyObj, $callback){
-		
-		$mkey = $keyObj->key;
-		if(isset($this->map[$mkey])){$mkey=$this->map[$mkey];}
-
-		$parameters = array();
-		foreach ($key->parameters as $key => $value) {
-			if(isset($this->map[$key])){$parameters[ $this->map[$key] ]=$value;}
-			else{$parameters[$key]=$value}
+	public static function GetIgnoredKeys(){
+		if(!isset(Jitro::$validatedKeys)){
+			return array_diff(Jitro::$keys, Jitro::GetValidatedKeys());
+		}else{
+			return array_diff(Jitro::$keys, Jitro::$validatedKeys);
 		}
-
-		//TODO: Read params to call
-		// make callback with result as param.
-
 	}
-
-
 }
-
-
 ?>

@@ -1,10 +1,10 @@
 
-=Jitro=
+#Jitro
 
 Nano REST API framework for easy GET and POST parameter interaction
 
 
-==Usage==
+##Usage
 	require_once('jitro.php');
 	try{
 		Jitro::AddKey('request',['add','remove'], 'POST');
@@ -15,8 +15,11 @@ Nano REST API framework for easy GET and POST parameter interaction
 		// Handle missing keys
 	}
 
+##License
+The MIT License (MIT)
 
-===Figure this===
+
+###Figure this
 
 Super simple Generic REST API framework
 Jitro? x1 has control over/harnesses/manages/directs/conducts x2 in x3 (activity/event/performance).

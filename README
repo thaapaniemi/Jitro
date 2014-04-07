@@ -1,8 +1,19 @@
 
 =Jitro
 
-Nano REST API framework for easy DB interaction
+Nano REST API framework for easy GET and POST parameter interaction
 
+
+==Usage
+	require_once('jitro.php');
+	try{
+		Jitro::AddKey('request',['add','remove'], 'POST');
+		$req = Jitro::Get('request');
+
+		if($req == 'add'){...}
+	}catch(JitroException $e){
+		// Handle missing keys
+	}
 
 
 ===Figure this

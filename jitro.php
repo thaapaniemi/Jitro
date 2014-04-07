@@ -52,7 +52,7 @@ class Key
 }
 
 /**
-* Manages keys, maps and DB?
+* Manages keys, validates, authenticates
 */
 class Jitro
 {
@@ -77,7 +77,7 @@ class Jitro
 		if(isset(Jitro::$validatedKeys[$key])){
 			return Jitro::$validatedKeys[$key]->Value();
 		}else{
-			throw new Exception("No valid key: $key", 1);
+			throw new JitroException("No valid key: $key", 1);
 		}
 	}
 
@@ -99,5 +99,29 @@ class Jitro
 			return array_diff(Jitro::$keys, Jitro::$validatedKeys);
 		}
 	}
+
+
+	public static function Authenticate($secret, $keys, $hashToCompare, $algo='sha1'){
+		$kvPairs = array();
+		foreach ($keys as $key => $value) {
+			$kvPairs[$key] = Jitro::Get($key);
+		}
+
+		$hash = http_build_query($kvPairs, '', '&');
+		$hash = hash_hmac($algo, $hash, $secret);
+
+		if($hash == $hashToCompare){
+			return True;
+		}else{
+			return False;
+		}
+	}
 }
+
+
+/**
+* Exception Jitro class throws when errors
+*/
+class JitroException extends Exception{}
+
 ?>

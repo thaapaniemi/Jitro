@@ -15,6 +15,9 @@ Nano REST API framework for easy GET and POST parameter interaction
 		// Handle missing keys
 	}
 
+##Special keywords
+* ALL: Accepts all values
+
 ##License
 The MIT License (MIT)
 

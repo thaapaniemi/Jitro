@@ -5,7 +5,7 @@
 */
 class Key
 {
-	protected $specialKeywords = array("ALL");
+	protected static $specialKeywords = array("ALL");
 	public $key;
 	public $acceptedValues;
 	public $route;
@@ -26,6 +26,7 @@ class Key
 		if(array_key_exists($this->key, $route) && in_array($route[$this->key], $this->acceptedValues)){
 			return True;
 		}else{
+			if(in_array($route[$this->key], Key::$specialKeywords)){return True;}
 			return False;
 		}
 	}

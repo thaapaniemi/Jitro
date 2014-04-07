@@ -57,18 +57,43 @@ class Key
 */
 class Jitro
 {
+	/**
+	* Keys added by AddKey-method
+	*/
 	protected static $keys = array();
 
+	/**
+	* Validated keys from keys-array
+	*/
 	protected static $validatedKeys = NULL;
+
+	/**
+	* Keys that didn't validate
+	*/
 	protected static $ignoredKeys = NULL;
 	
+	/**
+	* Static class only
+	*/
 	protected function __construct(){}
 
+	/**
+	* Add new key to validation
+	* @param string $key Key
+	* @param array(string) $acceptedValues Accepted values for key
+	* @param string $route GET or POST
+	*/
 	public static function AddKey($key, $acceptedValues, $route="POST")
 	{
 		Jitro::$keys[] = new Key($key, $acceptedValues, $route);
 	}
 
+	/**
+	* Get value of key or die trying
+	* @param string $key Key
+	* @return string Value
+	* @throws JitroException No valid key
+	*/
 	public static function Get($key){
 		if(!isset(Jitro::$validatedKeys) || !isset(Jitro::$ignoredKeys) ){
 			Jitro::$validatedKeys = Jitro::GetValidatedKeys();
@@ -82,6 +107,10 @@ class Jitro
 		}
 	}
 
+	/**
+	* Validate keys
+	* @return array Validated keys
+	*/
 	public static function GetValidatedKeys()
 	{
 		$validated = array();
@@ -93,6 +122,10 @@ class Jitro
 		return $validated;
 	}
 
+	/**
+	* Get complement of Validated keys
+	* @return array Ignored keys
+	*/
 	public static function GetIgnoredKeys(){
 		if(!isset(Jitro::$validatedKeys)){
 			return array_diff(Jitro::$keys, Jitro::GetValidatedKeys());
@@ -101,7 +134,13 @@ class Jitro
 		}
 	}
 
-
+	/**
+	* Authenticate Route parameters
+	*
+	*
+	*
+	* @return Boolean Is authenticated?
+	*/
 	public static function Authenticate($secret, $keys, $hashToCompare, $algo='sha1'){
 		$kvPairs = array();
 		foreach ($keys as $key => $value) {

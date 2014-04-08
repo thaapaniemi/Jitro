@@ -20,18 +20,24 @@ class Key
 	public function CheckacceptedValues()
 	{
 		if(!isset($this->key) || !isset($this->route)){return False;}
-
 		$route = $this->getRoute();
 		
-		if(array_key_exists($this->key, $route) && in_array($route[$this->key], $this->acceptedValues)){
-			return True;
-		}else{
-			if(in_array($route[$this->key], Key::$specialKeywords)){return True;}
-			return False;
+		if(array_key_exists($this->key, $route)){
+			if(in_array($route[$this->key], $this->acceptedValues)){ return True; }
+			
+			foreach (Key::$specialKeywords as $key => $value) {
+				if(in_array($value, $this->acceptedValues)){return True;}
+			}
 		}
+
+		return False;
 	}
 
 	public function __toString(){
+		return $this->Key();
+	}
+
+	public function Key(){
 		return $this->key;
 	}
 

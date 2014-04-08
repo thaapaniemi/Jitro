@@ -5,17 +5,11 @@
 class JitroTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var Jitro
-     */
-    protected $object;
-
-    /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
     protected function setUp()
     {
-        $this->object = new Jitro;
     }
 
     /**
@@ -28,10 +22,23 @@ class JitroTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers Jitro::AddKey
+     * @expectedException InvalidArgumentException
      * @todo   Implement testAddKey().
      */
     public function testAddKey()
     {
+        //ok values
+        Jitro::AddKey("a",array("a","b"), "GET");
+        Jitro::AddKey("b",array("a","b"), "POST");
+        Jitro::AddKey("a",array("ALL"), "GET");
+        
+        //Not ok
+        Jitro::AddKey("c",array(), "GET");
+        Jitro::AddKey("c",array("a"), "BLAAH");
+
+
+
+
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
           'This test has not been implemented yet.'

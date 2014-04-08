@@ -10,6 +10,12 @@ class Key
 	public $acceptedValues;
 	public $route;
 	
+	/**
+	* Create key
+	* @param string $key Key
+	* @param array(string) $acceptedValues Accepted values for key
+	* @param string $route GET or POST
+	*/
 	public function __construct($key, $acceptedValues, $route)
 	{
 		$this->key = $key;
@@ -17,6 +23,10 @@ class Key
 		$this->route = $route;
 	}
 
+	/**
+	* Check if Key is valid(found, result matches accepted values)
+	* @return Boolean Is valid
+	*/
 	public function CheckacceptedValues()
 	{
 		if(!isset($this->key) || !isset($this->route)){return False;}
@@ -142,9 +152,10 @@ class Jitro
 
 	/**
 	* Authenticate Route parameters
-	*
-	*
-	*
+	* @param string $secret Secret
+	* @param array(string) $keys Keys included in hash
+	* @param string $hashToCompare Result is compared against this hash
+	* @param string $algo Used hashing algorithm
 	* @return Boolean Is authenticated?
 	*/
 	public static function Authenticate($secret, $keys, $hashToCompare, $algo='sha1'){

@@ -194,17 +194,21 @@ class Jitro
 	* @return Boolean Is authenticated?
 	*/
 	public static function Authenticate($secret, $keys, $hashToCompare, $algo='sha1'){
-		$kvPairs = array();
-		foreach ($keys as $key => $value) {
-			$kvPairs[$key] = Jitro::Get($key);
-		}
-
-		$hash = http_build_query($kvPairs, '', '&');
-		$hash = hash_hmac($algo, $hash, $secret);
-
-		if($hash == $hashToCompare){
-			return True;
-		}else{
+		try{
+			$kvPairs = array();
+			foreach ($keys as $key => $value) {
+				$kvPairs[$key] = Jitro::Get($key);
+			}
+		
+			$hash = http_build_query($kvPairs, '', '&');
+			$hash = hash_hmac($algo, $hash, $secret);
+		
+			if($hash == $hashToCompare){
+				return True;
+			}else{
+				return False;
+			}
+		}catch( JitroException $e){
 			return False;
 		}
 	}

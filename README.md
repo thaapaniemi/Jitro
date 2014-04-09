@@ -1,7 +1,8 @@
 
 #Jitro
+jitro jalge REST
 
-Nano REST API framework for easy GET and POST parameter interaction
+Nano REST API framework for easy PHP GET,POST,FILES,(REQUEST),COOKIE,SESSION parameter interaction
 
 
 ##Usage

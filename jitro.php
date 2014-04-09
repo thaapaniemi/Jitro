@@ -5,9 +5,28 @@
 */
 class Key
 {
+	/**
+	* Keywords
+	* @var array
+	*/
 	protected static $specialKeywords = array("ALL");
+	
+	/**
+	* Key
+	* @var string
+	*/
 	public $key;
+
+	/**
+	* Accepted values for keys
+	* @var array
+	*/
 	public $acceptedValues;
+
+	/**
+	* Route to get key GET/POST/SESSION/REQUEST/COOKIE/FILES
+	* @var string
+	*/
 	public $route;
 	
 	/**
@@ -58,12 +77,28 @@ class Key
 	protected function getRoute(){
 		switch ($this->route) {
 			case 'GET':
-				return $_GET;
-				break;
+			return $_GET;
+			break;
 
-				case 'POST':
-				return $_POST;
-				break;
+			case 'POST':
+			return $_POST;
+			break;
+
+			case 'SESSION':
+			return $_SESSION;
+			break;
+
+			case 'COOKIES':
+			return $_COOKIE;
+			break;
+
+			case 'REQUEST':
+			return $_REQUEST;
+			break;
+
+			case 'FILES':
+			return $FILES;
+			break;
 		}
 	}
 }
@@ -97,7 +132,7 @@ class Jitro
 	* Add new key to validation
 	* @param string $key Key
 	* @param array(string) $acceptedValues Accepted values for key
-	* @param string $route GET or POST
+	* @param string $route GET or POST or etc
 	*/
 	public static function AddKey($key, $acceptedValues, $route="POST")
 	{
@@ -170,6 +205,23 @@ class Jitro
 		if($hash == $hashToCompare){
 			return True;
 		}else{
+			return False;
+		}
+	}
+
+	/**
+	* Test if key/keys are valid
+	* @param string all keys wanted to test
+	* @return Boolean is keys valid
+	*/
+	static public function IsValid(){
+		try{
+			foreach (func_get_args() as $value) {
+				Jitro::Get($value);
+			}
+			
+			return True;
+		}catch(JitroException $e){
 			return False;
 		}
 	}

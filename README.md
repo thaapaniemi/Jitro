@@ -1,6 +1,6 @@
 
 #Jitro
-jitro jalge REST
+la jitros jitro jalge REST
 
 Nano REST API framework for easy PHP GET,POST,FILES,(REQUEST),COOKIE,SESSION parameter interaction
 
@@ -17,7 +17,8 @@ Nano REST API framework for easy PHP GET,POST,FILES,(REQUEST),COOKIE,SESSION par
 	}
 
 ##Special keywords
-* ALL: Accepts all values
+* ALL: Accepts all values (must exists)
+* NOTEMPTY: Accepts all nonempty values
 
 ##License
 The MIT License (MIT)

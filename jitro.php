@@ -9,7 +9,7 @@ class Key
 	* Keywords
 	* @var array
 	*/
-	protected static $specialKeywords = array("ALL");
+	protected static $specialKeywords = array("ALL","NOTEMPTY");
 	
 	/**
 	* Key
@@ -55,25 +55,54 @@ class Key
 			if(in_array($route[$this->key], $this->acceptedValues)){ return True; }
 			
 			foreach (Key::$specialKeywords as $key => $value) {
-				if(in_array($value, $this->acceptedValues)){return True;}
+				if(in_array($value, $this->acceptedValues)){
+					switch ($value) {
+						case 'NOTEMPTY':
+							return (strlen($this->Value()) > 0);
+							break;
+						case 'ALL':
+							return True;
+							break;
+						
+						default:
+							return False;
+							break;
+					}
+				}
 			}
 		}
 
 		return False;
 	}
 
+	/**
+	* Returns Key
+	* @return string Key
+	*/
 	public function __toString(){
 		return $this->Key();
 	}
 
+	/**
+	* Get Key
+	* @return string Key
+	*/
 	public function Key(){
 		return $this->key;
 	}
 
+	/**
+	* Get Value
+	* @return string Value
+	*/
 	public function Value(){
 		return $this->getRoute()[$this->key];
 	}
 
+	/**
+	* Get route array
+	* @return array Route array
+	*/
 	protected function getRoute(){
 		switch ($this->route) {
 			case 'GET':

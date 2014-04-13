@@ -28,66 +28,73 @@ class KeyTest extends PHPUnit_Framework_TestCase
     {
     }
 
-    /**
+    protected function emptyArrays(){
+    	$_GET = array();
+    	$_POST = array();
+    	$_REQUES = array();
+    	$_COOKIE = array();
+    	$_SESSION = array();
+    }
+
+    protected function setArray($target, $newArray){
+    	switch ($target) {
+    		case 'GET':
+    			$_GET = $newArray;
+    			break;
+    		case 'POST':
+    			$_POST = $newArray;
+    			break;
+    		case 'REQUEST':
+    			$_REQUEST = $newArray;
+    			break;
+    		case 'SESSION':
+    			$_SESSION = $newArray;
+    			break;
+    		case 'COOKIE':
+    			$_COOKIE = $newArray;
+    			break;
+    		
+    		default:
+    			throw new Exception("Error Processing Request", 1);
+    			break;
+    	}
+    }
+
+    protected function tArray($target){
+    	$this->setArray($target,array("a"=>"1", "b"=>"2", "c"=>NULL, "x"=>"3"));
+    	
+    	$okKeys = array();
+    	#OK keys
+    	$keys[] = new Key("a", "ALLKEYS", $target);
+    	$keys[] = new Key("b", "NOTEMPTY", $target);
+    	$keys[] = new Key("x", "3", $target);
+
+    	$errorKeys = array();
+    	$keys[] = new Key("g", "ALLKEYS", $target);
+    	$keys[] = new Key("c", "NOTEMPTY", $target);
+    	$keys[] = new Key("x", "5", $target);
+
+
+    	foreach ($okKeys as $key => $value) {
+    		$this->assertTrue($value->CheckacceptedValues());
+    	}
+
+    	foreach ($errorKeys as $key => $value) {
+    		$this->assertFalse($value->CheckacceptedValues());
+    	}
+
+    }
+
+	/**
      * @covers Key::CheckacceptedValues
      */
-    public function testCheckacceptedValues()
-    {
-        $_GET = array();
-        $_POST = array();
+    public function testArrays(){
+    	$targets = array("GET","POST","REQUEST","SESSION","COOKIE");
 
-        $ok = array("a","b",1);
-        $err = array("aa","sfeg",5);
-
-        $keyGET = new Key("aa", $ok, "GET");
-        $keyPOST = new Key("aa", $ok, "POST");
-
-        $keyAllGET = new Key("aa", array("ALL"), "GET");
-        $keyAllPOST = new Key("aa", array("ALL"), "POST");
-
-        $this->assertFalse($keyGET->CheckacceptedValues());
-        $this->assertFalse($keyPOST->CheckacceptedValues());
-
-        foreach ($ok as $key => $value) {
-            $_GET['aa'] = $value;
-            $_POST = array();
-
-            $this->assertTrue($keyGET->CheckacceptedValues());
-            $this->assertFalse($keyPOST->CheckacceptedValues());
-
-            $this->assertTrue($keyAllGET->CheckacceptedValues());
-
-            $this->assertFalse($keyAllPOST->CheckacceptedValues());
-
-            $_GET = array();
-            $_POST['aa'] = $value;
-
-            $this->assertFalse($keyGET->CheckacceptedValues());
-            $this->assertTrue($keyPOST->CheckacceptedValues());
-
-            $this->assertFalse($keyAllGET->CheckacceptedValues());
-            $this->assertTrue($keyAllPOST->CheckacceptedValues());
-        }
-
-        foreach ($err as $key => $value) {
-            $_GET['aa'] = $value;
-            $_POST = array();
-
-            $this->assertFalse($keyGET->CheckacceptedValues());
-            $this->assertFalse($keyPOST->CheckacceptedValues());
-
-            $this->assertTrue($keyAllGET->CheckacceptedValues());
-            $this->assertFalse($keyAllPOST->CheckacceptedValues());
-
-            $_GET = array();
-            $_POST['aa'] = $value;
-
-            $this->assertFalse($keyGET->CheckacceptedValues());
-            $this->assertFalse($keyPOST->CheckacceptedValues());
-
-            $this->assertFalse($keyAllGET->CheckacceptedValues());
-            $this->assertTrue($keyAllPOST->CheckacceptedValues());
-        }
+    	foreach ($targets as $key => $value) {
+    		$this->emptyArrays();
+    		$this->tArray($value);
+    	}
 
     }
 

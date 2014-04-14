@@ -26,6 +26,7 @@ class JitroTest extends PHPUnit_Framework_TestCase
     	$_REQUES = array();
     	$_COOKIE = array();
     	$_SESSION = array();
+    	$_FILES = array();
     }
 
     protected function setArray($target, $newArray){
@@ -57,7 +58,6 @@ class JitroTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers Jitro::AddKey
-     * @expectedException InvalidArgumentException
      * @todo   Implement testAddKey().
      */
     public function testAddOKKey()
@@ -87,8 +87,9 @@ class JitroTest extends PHPUnit_Framework_TestCase
     		$this->emptyArrays();
 			$this->setArray($target,$keys);
     		foreach ($keys as $key => $value) {
-				echo "$key: " . Jitro::IsValid($key) ."\n";
+				Jitro::Clear();
 				Jitro::AddKey($key,array("ALL"),$target);
+
 				$this->AssertTrue( Jitro::IsValid($key) );
     		}
     	}
@@ -100,6 +101,7 @@ class JitroTest extends PHPUnit_Framework_TestCase
     		$this->emptyArrays();
 			$this->setArray($target,$keys);
     		foreach ($keys as $key => $value) {
+				Jitro::Clear();
 				Jitro::AddKey($key,array("NOTEMPTY"),$target);
 				$this->AssertTrue( Jitro::IsValid($key) );
     		}
@@ -110,6 +112,7 @@ class JitroTest extends PHPUnit_Framework_TestCase
     	foreach ($targets as $key0 => $target) {
     		$this->emptyArrays();
 			$this->setArray($target,$keys);
+			
 			Jitro::AddKey("c",array("NOTEMPTY"),$target);
 			$this->AssertFalse( Jitro::IsValid("c") );
 		}
@@ -119,14 +122,23 @@ class JitroTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers Jitro::Get
+     * @expectedException JitroException
      * @todo   Implement testGet().
      */
     public function testGet()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        Jitro::Clear();
+        $_POST = array("a"=>"b","b"=>2, "c"=>NULL);
+
+
+        Jitro::AddKey("a",array("ALL"));
+        Jitro::AddKey("b",array(2));
+        Jitro::AddKey("c",array("NOTEMPTY"));
+
+        $this->assertEquals("b", Jitro::Get('a'));
+        $this->assertEquals(2, Jitro::Get('b'));
+        Jitro::Get('c');
+
     }
 
     /**

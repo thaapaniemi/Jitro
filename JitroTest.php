@@ -20,29 +20,101 @@ class JitroTest extends PHPUnit_Framework_TestCase
     {
     }
 
+    protected function emptyArrays(){
+    	$_GET = array();
+    	$_POST = array();
+    	$_REQUES = array();
+    	$_COOKIE = array();
+    	$_SESSION = array();
+    }
+
+    protected function setArray($target, $newArray){
+    	switch ($target) {
+    		case 'GET':
+    			$_GET = $newArray;
+    			break;
+    		case 'POST':
+    			$_POST = $newArray;
+    			break;
+    		case 'REQUEST':
+    			$_REQUEST = $newArray;
+    			break;
+    		case 'SESSION':
+    			$_SESSION = $newArray;
+    			break;
+    		case 'COOKIE':
+    			$_COOKIE = $newArray;
+    			break;
+    		case 'FILES':
+    			$_FILES = $newArray;
+    			break;
+    		
+    		default:
+    			throw new Exception("JitroTest:setArray::Error Processing Request", 1);
+    			break;
+    	}
+    }
+
     /**
      * @covers Jitro::AddKey
      * @expectedException InvalidArgumentException
      * @todo   Implement testAddKey().
      */
-    public function testAddKey()
+    public function testAddOKKey()
     {
-        //ok values
-        Jitro::AddKey("a",array("a","b"), "GET");
-        Jitro::AddKey("b",array("a","b"), "POST");
-        Jitro::AddKey("a",array("ALL"), "GET");
+    	Jitro::Clear();
+        $this->emptyArrays();
         
-        //Not ok
-        Jitro::AddKey("c",array(), "GET");
-        Jitro::AddKey("c",array("a"), "BLAAH");
+        $targets = array("GET","POST","REQUEST","SESSION","COOKIE", "FILES");
+        $keys = array("a"=>"z","b"=>"3","c"=>"x","d"=>"w","e"=>"v");
 
 
+    	foreach ($targets as $key0 => $target) {
+    		$this->emptyArrays();
+			$this->setArray($target,$keys);
+
+    		foreach ($keys as $key => $value) {
+    			Jitro::Clear();
+    			Jitro::AddKey($key,array($value),$target);
+    			$this->AssertTrue( Jitro::IsValid($key) );
+    		}
+    	}
+
+    	Jitro::Clear();
+		$keys = array("a"=>"z","b"=>"y","c"=>NULL,"d"=>"w","e"=>4);
+
+    	foreach ($targets as $key0 => $target) {
+    		$this->emptyArrays();
+			$this->setArray($target,$keys);
+    		foreach ($keys as $key => $value) {
+				echo "$key: " . Jitro::IsValid($key) ."\n";
+				Jitro::AddKey($key,array("ALL"),$target);
+				$this->AssertTrue( Jitro::IsValid($key) );
+    		}
+    	}
+
+    	Jitro::Clear();
+		$keys = array("a"=>"z","b"=>"y","c"=>3,"d"=>"w","e"=>4);
+
+    	foreach ($targets as $key0 => $target) {
+    		$this->emptyArrays();
+			$this->setArray($target,$keys);
+    		foreach ($keys as $key => $value) {
+				Jitro::AddKey($key,array("NOTEMPTY"),$target);
+				$this->AssertTrue( Jitro::IsValid($key) );
+    		}
+    	}
+
+    	Jitro::Clear();
+    	$keys = array("a"=>"z","b"=>"y","c"=>NULL,"d"=>"w","e"=>4);
+    	foreach ($targets as $key0 => $target) {
+    		$this->emptyArrays();
+			$this->setArray($target,$keys);
+			Jitro::AddKey("c",array("NOTEMPTY"),$target);
+			$this->AssertFalse( Jitro::IsValid("c") );
+		}
 
 
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
     }
 
     /**

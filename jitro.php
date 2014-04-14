@@ -117,7 +117,7 @@ class Key
 			return $_SESSION;
 			break;
 
-			case 'COOKIES':
+			case 'COOKIE':
 			return $_COOKIE;
 			break;
 
@@ -126,7 +126,11 @@ class Key
 			break;
 
 			case 'FILES':
-			return $FILES;
+			return $_FILES;
+			break;
+
+			default:
+			throw Exception("Route unknown");
 			break;
 		}
 	}
@@ -257,6 +261,16 @@ class Jitro
 		}catch(JitroException $e){
 			return False;
 		}
+	}
+
+	/**
+	* Clears all added keys
+	*/
+	public static function Clear()
+	{
+		Jitro::$keys = array();
+		Jitro::$validatedKeys = NULL;
+		Jitro::$ignoredKeys = NULL;
 	}
 }
 

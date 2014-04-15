@@ -2,8 +2,10 @@
 #Jitro
 la jitros jitro jalge REST
 
-Nano REST API framework for easy PHP GET,POST,FILES,(REQUEST),COOKIE,SESSION parameter interaction
+Tiny framework for easy PHP REST parameter interaction
 
+##Arrays
+* GET, POST, REQUEST, COOKIE, SESSION, FILES
 
 ##Usage
 	require_once('jitro.php');

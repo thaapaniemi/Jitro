@@ -211,11 +211,19 @@ class Jitro
 	* @return array Ignored keys
 	*/
 	public static function GetIgnoredKeys(){
+		$ra = NULL;
 		if(!isset(Jitro::$validatedKeys)){
-			return array_diff(Jitro::$keys, Jitro::GetValidatedKeys());
+			$ra = array_diff(Jitro::$keys, Jitro::GetValidatedKeys());
 		}else{
-			return array_diff(Jitro::$keys, Jitro::$validatedKeys);
+			$ra = array_diff(Jitro::$keys, Jitro::$validatedKeys);
 		}
+
+		$temp = array();
+		foreach ($ra as $key => $value) {
+			$temp[$value->Key()] = $value;
+		}
+
+		return $temp;
 	}
 
 	/**

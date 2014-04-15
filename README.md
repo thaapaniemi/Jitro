@@ -1,5 +1,4 @@
-#Jitro
-[![Build Status](https://travis-ci.org/thaapaniemi/Jitro.svg?branch=master)](https://travis-ci.org/thaapaniemi/Jitro)
+#Jitro [![Build Status](https://travis-ci.org/thaapaniemi/Jitro.svg?branch=master)](https://travis-ci.org/thaapaniemi/Jitro)
 la jitros jitro jalge REST
 
 Tiny framework for easy PHP REST parameter interaction

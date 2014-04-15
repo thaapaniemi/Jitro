@@ -100,7 +100,8 @@ class Key
 	* @return string Value
 	*/
 	public function Value(){
-		return $this->getRoute()[$this->key];
+		$route = $this->getRoute();
+		return $route[$this->key];
 	}
 
 	/**

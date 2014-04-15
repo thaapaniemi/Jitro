@@ -1,4 +1,8 @@
 <?php
+/**
+* Jitro: Tiny framework for easy PHP REST parameter interaction
+*/
+
 
 /**
 * Key handler

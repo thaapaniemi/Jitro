@@ -208,6 +208,22 @@ class JitroTest extends PHPUnit_Framework_TestCase
      */
     public function testAuthenticate()
     {
-        //TODO
+        $_POST = array("a"=>1, "b"=>2);
+        Jitro::Clear();
+        Jitro::AddKey("a",array("ALL"),"POST");
+        Jitro::AddKey("b",array("ALL"),"POST");
+
+        $str = "a=1&b=2";
+        $secret = "jreoigjoreis";
+        
+        $hash = hash_hmac('sha1', $str, $secret);
+
+        $this->assertTrue(Jitro::Authenticate($secret, array("a","b"), $hash));
+        $this->assertFalse(Jitro::Authenticate($secret . "a", array("a","b"), $hash));
+        $this->assertFalse(Jitro::Authenticate($secret, array("a"), $hash));
+        $this->assertFalse(Jitro::Authenticate($secret, array("a","b"), $hash . "a"));
+
+
+        
     }
 }

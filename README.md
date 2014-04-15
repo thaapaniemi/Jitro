@@ -1,4 +1,4 @@
-
+[![Build Status](https://travis-ci.org/thaapaniemi/Jitro.svg?branch=master)](https://travis-ci.org/thaapaniemi/Jitro)
 #Jitro
 la jitros jitro jalge REST
 

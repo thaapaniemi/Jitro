@@ -214,7 +214,7 @@ class JitroTest extends PHPUnit_Framework_TestCase
         Jitro::AddKey("b",array("ALL"),"POST");
 
         $str = "a=1&b=2";
-        $secret = "jreoigjoreis";
+        $secret = "aaaaabbbbb";
         
         $hash = hash_hmac('sha1', $str, $secret);
 

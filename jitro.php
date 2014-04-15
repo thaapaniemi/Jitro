@@ -243,12 +243,12 @@ class Jitro
 		try{
 			$kvPairs = array();
 			foreach ($keys as $key => $value) {
-				$kvPairs[$key] = Jitro::Get($key);
+				$kvPairs[$value] = Jitro::Get($value);
 			}
 		
 			$hash = http_build_query($kvPairs, '', '&');
 			$hash = hash_hmac($algo, $hash, $secret);
-		
+
 			if($hash == $hashToCompare){
 				return True;
 			}else{

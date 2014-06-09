@@ -129,16 +129,21 @@ class JitroTest extends PHPUnit_Framework_TestCase
     public function testGet()
     {
         Jitro::Clear();
-        $_POST = array("a"=>"b","b"=>2, "c"=>NULL);
+        $_POST = array("a"=>"b","b"=>2, "c"=>NULL, "related"=>"something");
 
 
         Jitro::AddKey("a",array("ALL"));
         Jitro::AddKey("b",array(2));
         Jitro::AddKey("c",array("NOTEMPTY"));
 
+        Jitro::AddKey("related",array("NOTEMPTY"), "POST" ,array("a","b","c"));
+
+
+
         $this->assertEquals("b", Jitro::Get('a'));
         $this->assertEquals(2, Jitro::Get('b'));
-        Jitro::Get('c');
+        
+        $this->assertEquals("something", Jitro::Get('related'));
 
     }
 
@@ -201,6 +206,28 @@ class JitroTest extends PHPUnit_Framework_TestCase
 
     	}
     }
+
+    /**
+     * @covers Jitro::Get
+     * @todo   Implement testRelated().
+     * @expectedException JitroException
+     */
+    public function TestRelated()
+    {
+        $_POST = array("a1"=>1,"b1"=>2,"c1"=>3);
+
+        Jitro::AddKey("a1",array(1),"POST",array("b1"));
+        Jitro::AddKey("b1",array("NOTEMPTY"),"POST",array());
+        Jitro::AddKey("c1",array("NOTEMPTY"),"POST",array("a1","notexists"));
+
+        $this->assertEquals(1, Jitro::Get('a1'));
+        $this->assertEquals(2, Jitro::Get('b1'));
+
+        //Throw JitroException
+        Jitro::Get("c1");
+
+    }
+
 
     /**
      * @covers Jitro::Authenticate

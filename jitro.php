@@ -32,6 +32,11 @@ class Key
 	* @var string
 	*/
 	public $route;
+
+	/*
+	* Related keys
+	*/
+	public $related_keys;
 	
 	/**
 	* Create key
@@ -39,11 +44,18 @@ class Key
 	* @param array(string) $acceptedValues Accepted values for key
 	* @param string $route GET or POST
 	*/
-	public function __construct($key, $acceptedValues, $route)
+	public function __construct($key, $acceptedValues, $route, $related_keys=NULL)
 	{
 		$this->key = $key;
 		$this->acceptedValues = $acceptedValues;
 		$this->route = $route;
+
+		if(!is_null($related_keys)){
+			$this->related_keys = $related_keys;
+		}else{
+			$this->related_keys = array();
+		}
+		
 	}
 
 	/**
@@ -135,7 +147,7 @@ class Key
 			break;
 
 			default:
-			throw Exception("Route unknown");
+			throw new Exception("Route unknown");
 			break;
 		}
 	}
@@ -172,9 +184,9 @@ class Jitro
 	* @param array(string) $acceptedValues Accepted values for key
 	* @param string $route GET or POST or etc
 	*/
-	public static function AddKey($key, $acceptedValues, $route="POST")
+	public static function AddKey($key, $acceptedValues, $route="POST", $related_keys=NULL)
 	{
-		Jitro::$keys[] = new Key($key, $acceptedValues, $route);
+		Jitro::$keys[] = new Key($key, $acceptedValues, $route, $related_keys);
 	}
 
 	/**
@@ -190,6 +202,12 @@ class Jitro
 		}
 
 		if(isset(Jitro::$validatedKeys[$key])){
+
+			// Check related keys
+			foreach (Jitro::$validatedKeys[$key]->related_keys as $rel_key => $rel_value) {
+				Jitro::Get($rel_value);
+			}
+
 			return Jitro::$validatedKeys[$key]->Value();
 		}else{
 			throw new JitroException("No valid key: $key", 1);

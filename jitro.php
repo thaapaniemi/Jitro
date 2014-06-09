@@ -183,6 +183,7 @@ class Jitro
 	* @param string $key Key
 	* @param array(string) $acceptedValues Accepted values for key
 	* @param string $route GET or POST or etc
+	* @param array(string) $related_keys enforced related keys for Key
 	*/
 	public static function AddKey($key, $acceptedValues, $route="POST", $related_keys=NULL)
 	{

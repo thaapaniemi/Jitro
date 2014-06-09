@@ -21,5 +21,9 @@ Tiny framework for easy PHP REST parameter interaction
 * ALL: Accepts all values (must exists)
 * NOTEMPTY: Accepts all nonempty values
 
+##Related keys
+Related keys can be defined as:
+	Jitro::AddKey('request',['add','remove'], 'POST', ["rel_key1","rel_key2"]);
+
 ##License
 The MIT License (MIT)

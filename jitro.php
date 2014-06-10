@@ -36,7 +36,12 @@ class Key
 	/*
 	* Related keys
 	*/
-	public $related_keys;
+	public $key_related_keys;
+
+	/*
+	* Related keys
+	*/
+	public $value_related_keys;
 	
 	/**
 	* Create key
@@ -44,18 +49,23 @@ class Key
 	* @param array(string) $acceptedValues Accepted values for key
 	* @param string $route GET or POST
 	*/
-	public function __construct($key, $acceptedValues, $route, $related_keys=NULL)
+	public function __construct($key, $acceptedValues, $route, $key_related_keys=NULL,$value_related_keys=NULL)
 	{
 		$this->key = $key;
 		$this->acceptedValues = $acceptedValues;
 		$this->route = $route;
 
-		if(!is_null($related_keys)){
-			$this->related_keys = $related_keys;
+		if(!is_null($key_related_keys)){
+			$this->key_related_keys = $key_related_keys;
 		}else{
-			$this->related_keys = array();
+			$this->key_related_keys = array();
 		}
-		
+
+		if(!is_null($value_related_keys)){
+			$this->value_related_keys = $value_related_keys;
+		}else{
+			$this->value_related_keys = array();
+		}
 	}
 
 	/**
@@ -183,11 +193,11 @@ class Jitro
 	* @param string $key Key
 	* @param array(string) $acceptedValues Accepted values for key
 	* @param string $route GET or POST or etc
-	* @param array(string) $related_keys enforced related keys for Key
+	* @param array(string) $key_related_keys enforced related keys for Key
 	*/
-	public static function AddKey($key, $acceptedValues, $route="POST", $related_keys=NULL)
+	public static function AddKey($key, $acceptedValues, $route="POST", $key_related_keys=NULL)
 	{
-		Jitro::$keys[] = new Key($key, $acceptedValues, $route, $related_keys);
+		Jitro::$keys[] = new Key($key, $acceptedValues, $route, $key_related_keys);
 	}
 
 	/**
@@ -204,9 +214,16 @@ class Jitro
 
 		if(isset(Jitro::$validatedKeys[$key])){
 
-			// Check related keys
-			foreach (Jitro::$validatedKeys[$key]->related_keys as $rel_key => $rel_value) {
+			// Check key-related keys
+			foreach (Jitro::$validatedKeys[$key]->key_related_keys as $rel_key => $rel_value) {
 				Jitro::Get($rel_value);
+			}
+
+			// Check value-related keys
+			if(isset( Jitro::$validatedKeys[$key]->value_related_keys[ Jitro::$validatedKeys[$key]->Value() ] )){
+				foreach (Jitro::$validatedKeys[$key]->value_related_keys[ Jitro::$validatedKeys[$key]->Value() ] as $vrkey => $vrvalue) {
+					Jitro::Get($vrvalue);
+				}
 			}
 
 			return Jitro::$validatedKeys[$key]->Value();
